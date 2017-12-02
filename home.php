@@ -19,7 +19,7 @@
             }
             $getFromU->create('tweets', array('status' => $status, 'tweetBy' => $user_id, 'tweetImage' => $tweetImage, 'postedOn' => date('Y-m-d H:i:s')));
         } else {
-            $error = "Выберите картинку для записи";
+            $error = "Выберите картинку для вставки";
         }
     }
 ?>
