@@ -18,6 +18,8 @@
                 $error = "Текст Вашего сообщения слишком длинный!";
             }
             $getFromU->create('tweets', array('status' => $status, 'tweetBy' => $user_id, 'tweetImage' => $tweetImage, 'postedOn' => date('Y-m-d H:i:s')));
+            // int preg_match_all ( string $pattern , string $subject [, array &$matches [, int $flags = PREG_PATTERN_ORDER [, int $offset = 0 ]]] )
+            // Ищет в строке subject все совпадения с шаблоном pattern и помещает результат в массив matches в порядке, определяемом комбинацией флагов flags.
             preg_match_all("/#+([a-zA-Z0-9]+)/i", $status, $hashtag);
             if(!empty($hashtag)){
                 $getFromT->addTrend($status);
