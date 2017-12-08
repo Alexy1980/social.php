@@ -34,7 +34,7 @@ class Tweet extends User {
                                 <span>'.$tweet->postedOn.'</span>
                             </div>
                             <div class="t-h-c-dis">
-                                '.$tweet->status.'
+                                '.$this->getTweetLinks($tweet->status).'
                             </div>
                         </div>
                     </div>';
@@ -55,7 +55,7 @@ class Tweet extends User {
                         <ul>
                             <li><button><a href="#"><i class="fa fa-share" aria-hidden="true"></i></a></button></li>
                             <li><button><a href="#"><i class="fa fa-retweet" aria-hidden="true"></i></a></button></li>
-                            <li><button><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></button></li>
+                            <li><button class="like-btn" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-heart-o" aria-hidden="true"></i><span class="likesCount"></span></button></li>
                                 <li>
                                 <a href="#" class="more"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                 <ul>
@@ -97,5 +97,23 @@ class Tweet extends User {
                 $stmt->execute(array(':hashtag' => $trend));
             }
         }
+    }
+
+    public function addLike($user_id, $tweet_id, $get_id){
+        // $tweet_id - id твита
+        // при каждом новом лайке увеличиваем на единицу значение likesCount в таблице tweets
+        $stmt = $this->pdo->prepare("UPDATE `tweets` SET `likesCount` = `likesCount` + 1 WHERE `tweetID` = :tweet_id");
+        $stmt->bindParam(":tweet_id", $tweet_id, PDO::PARAM_INT);
+        $stmt->execute();
+        // likeBy - кто лайкнул
+        $this->create('likes', array('likeBy' => $user_id, 'likeOn' => $tweet_id));
+    }
+
+    public function getTweetLinks($tweet){
+        // var_dump($tweet);
+        $tweet = preg_replace("/(https?:\/\/)([\w]+.)([\w\.]+)/", "<a href='$0' target='_blink'>$0</a>", $tweet);
+        $tweet = preg_replace("/#([\w\.]+)/", "<a href='".BASE_URL."hashtag/$1'>$0</a>", $tweet);
+        $tweet = preg_replace("/@([\w\.]+)/", "<a href='".BASE_URL."/$1'>$0</a>", $tweet);
+        return $tweet;
     }
 }
