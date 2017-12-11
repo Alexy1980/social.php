@@ -8,3 +8,12 @@
         $get_id = $_POST['user_id'];
         $getFromT->addLike($user_id, $tweet_id, $get_id);
     }
+
+    if(isset($_POST['unlike']) && !empty($_POST['unlike'])){
+        // id пользователя
+        $user_id = $_SESSION['user_id'];
+        $tweet_id = $_POST['unlike'];
+        // id пользователя, добавившего лайк
+        $get_id = $_POST['user_id'];
+        $getFromT->unlike($user_id, $tweet_id, $get_id);
+    }

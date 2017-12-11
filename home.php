@@ -191,7 +191,7 @@
                         <!--Tweet SHOW WRAPPER-->
                         <div class="tweets">
                             <!--TWEETS HERE-->
-                            <?php $getFromT->tweets(); ?>
+                            <?php $getFromT->tweets($user_id); ?>
                         </div>
                         <!--TWEETS SHOW WRAPPER-->
 
