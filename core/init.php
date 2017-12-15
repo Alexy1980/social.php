@@ -1,9 +1,13 @@
 <?php
 
 include "database/connection.php";
-include "classes/user.php";
-include "classes/follow.php";
-include "classes/tweet.php";
+//include "classes/user.php";
+//include "classes/follow.php";
+//include "classes/tweet.php";
+
+spl_autoload_register(function ($class_name) {
+    include 'classes/'.$class_name . '.php';
+});
 
 global $pdo;
 
