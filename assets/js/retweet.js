@@ -16,7 +16,7 @@ $(function(){
 
     $(document).on('click', '.retweet-it', function(){
         var comment = $('.retweetMsg').val();
-        $.post('http://twitter/core/ajax/retweet.php', {retweet:$tweet_id, user_id:$user_id, comment:comment}, function(data){
+        $.post('http://twitter/core/ajax/retweet.php', {retweet:$tweet_id, user_id:$user_id, comment:comment}, function(){
             $('.retweet-popup').hide();
             $count++;
             $counter.text($count);
