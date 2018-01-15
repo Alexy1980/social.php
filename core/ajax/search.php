@@ -3,24 +3,27 @@
     if(isset($_POST['search']) && !empty($_POST['search'])){
         $search = $getFromU->checkInput($_POST['search']);
         $result = $getFromU->search($search);
+        $base_url = BASE_URL;
         if(!empty($result)){
             echo '<div class="nav-right-down-wrap"><ul>';
             foreach($result as $user){
-                echo '<li>
+                echo <<<LABEL
+                <li>
                         <div class="nav-right-down-inner">
                             <div class="nav-right-down-left">
-                                <a href="'.BASE_URL.$user->username.'"><img src="'.BASE_URL.$user->profileImage.'"></a>
+                                <a href="{$base_url}{$user->username}"><img src="{$base_url}{$user->profileImage}"></a>
                             </div>
                             <div class="nav-right-down-right">
                                 <div class="nav-right-down-right-headline">
-                                    <a href="'.BASE_URL.$user->username.'">'.$user->screenName.'</a><span>@'.$user->username.'</span>
+                                    <a href="{$base_url}{$user->username}">$user->screenName</a><span>@$user->username</span>
                                 </div>
                                 <div class="nav-right-down-right-body">
 
                                 </div>
                             </div>
                         </div>
-                     </li>';
+                     </li>
+LABEL;
             }
             echo '</ul></div>';
         }

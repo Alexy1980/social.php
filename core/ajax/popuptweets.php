@@ -107,7 +107,7 @@
                             <img src="<?php echo BASE_URL.$user->profileImage; ?>"/>
                         </div>
                         <div class="tweet-show-popup-footer-input-right">
-                            <input id="commentField" type="text" name="comment"  placeholder="Reply to @<?php echo $tweet->username; ?>">
+                            <input id="commentField" type="text" name="comment" data-tweet="<?php echo $tweet->tweetID; ?>"  placeholder="Reply to @<?php echo $tweet->username; ?>">
                         </div>
                     </div>
                     <div class="tweet-footer">
@@ -123,6 +123,7 @@
                         </div>
                         <div class="t-fo-right">
                             <input type="submit" id="postComment">
+                            <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/comment.js"></script>
                         </div>
                     </div>
                 </div><!--tweet-show-popup-footer-input-wrap end-->
