@@ -123,7 +123,6 @@
                         </div>
                         <div class="t-fo-right">
                             <input type="submit" id="postComment">
-                            <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/comment.js"></script>
                         </div>
                     </div>
                 </div><!--tweet-show-popup-footer-input-wrap end-->
@@ -157,12 +156,15 @@
                                                 <ul>
                                                     <li><button><i class="fa fa-share" aria-hidden="true"></i></button></li>
                                                     <li><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></li>
+                                                    '.(($comment->commentBy === $user_id) ? '
                                                     <li>
-                                                    <a href="#" class="more"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <ul>
-                                                      <li><label class="deleteTweet">Delete Tweet</label></li>
-                                                    </ul>
-                                                    </li>
+                                                        <a href="#" class="more"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                        <ul>
+                                                          <li>
+                                                              <label class="deleteComment" data-tweet="'.$tweet->tweetID.'" data-comment="'.$comment->commentID.'">Delete Tweet</label>
+                                                          </li>
+                                                        </ul>
+                                                    </li>' : '').'
                                                 </ul>
                                             </div>
                                         </div>

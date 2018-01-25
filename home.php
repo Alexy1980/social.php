@@ -7,6 +7,9 @@
     if($getFromU->loggedIn() === false){
         header('Location: index.php');
     }
+
+    // $getFromU->delete('comments', array('commentID' => '1'));
+
     if(isset($_POST['tweet'])){
         $status = $getFromU->checkinput($_POST['status']);
         $tweetImage = '';
@@ -202,6 +205,8 @@
                         <script type="text/javascript" src="assets/js/like.js"></script>
                         <script type="text/javascript" src="assets/js/retweet.js"></script>
                         <script type="text/javascript" src="assets/js/popuptweets.js"></script>
+                        <script type="text/javascript" src="assets/js/delete.js"></script>
+                        <script type="text/javascript" src="assets/js/comment.js"></script>
                     </div><!-- in left wrap-->
                 </div><!-- in center end -->
 
