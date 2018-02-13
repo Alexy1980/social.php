@@ -114,42 +114,6 @@ class Tweet extends User {
         }
     }
 
-    public function getTrendByHash($hashtag){
-        $stmt = $this->pdo->prepare("SELECT * FROM `trends` WHERE `hashtag` LIKE :hashtag LIMIT 5");
-        $stmt->bindValue(":hashtag", $hashtag.'%');
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    public function getMention($mention){
-        $stmt = $this->pdo->prepare("SELECT `user_id`, `username`, `screenName`, `profileImage` FROM `users` WHERE `username` LIKE :mention OR `screenName` LIKE :mention LIMIT 5");
-        // bindValue сразу задает значение для плейсхолдера. bindParam "связывает" плейсхолдер с переменной (переменная в bindParam передается по ссылке)
-        $stmt->bindValue(":mention", $mention.'%');
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    public function addTrend($hashtag){
-        preg_match_all("/#+([a-zA-Z0-9]+)/i", $hashtag, $matches);
-        if($matches){
-            // array_values() возвращает массив со всеми элементами массива array. Она также заново индексирует возвращаемый массив числовыми индексами
-            $result = array_values($matches[1]);
-        }
-        $sql = "INSERT INTO `trends` (`hashtag`, `createdOn`) VALUES(:hashtag, CURRENT_TIMESTAMP )";
-        foreach ($result as $trend){
-            if($stmt = $this->pdo->prepare($sql)){
-                $stmt->execute(array(':hashtag' => $trend));
-            }
-        }
-    }
-
-    public function comments($tweet_id){
-        $stmt = $this->pdo->prepare("SELECT * FROM `comments` LEFT JOIN `users` ON `commentBy` = `user_id` WHERE `commentOn` = :tweet_id");
-        $stmt->bindParam(":tweet_id", $tweet_id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
-    }
-
     public function addLike($user_id, $tweet_id, $get_id){
         // $tweet_id - id твита
         // при каждом новом лайке увеличиваем на единицу значение likesCount в таблице tweets
@@ -212,5 +176,57 @@ class Tweet extends User {
         $stmt->bindParam(":tweet_id", $tweet_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getTrendByHash($hashtag){
+        $stmt = $this->pdo->prepare("SELECT * FROM `trends` WHERE `hashtag` LIKE :hashtag LIMIT 5");
+        $stmt->bindValue(":hashtag", $hashtag.'%');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getMention($mention){
+        $stmt = $this->pdo->prepare("SELECT `user_id`, `username`, `screenName`, `profileImage` FROM `users` WHERE `username` LIKE :mention OR `screenName` LIKE :mention LIMIT 5");
+        // bindValue сразу задает значение для плейсхолдера. bindParam "связывает" плейсхолдер с переменной (переменная в bindParam передается по ссылке)
+        $stmt->bindValue(":mention", $mention.'%');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function addTrend($hashtag){
+        preg_match_all("/#+([a-zA-Z0-9]+)/i", $hashtag, $matches);
+        if($matches){
+            // array_values() возвращает массив со всеми элементами массива array. Она также заново индексирует возвращаемый массив числовыми индексами
+            $result = array_values($matches[1]);
+        }
+        $sql = "INSERT INTO `trends` (`hashtag`, `createdOn`) VALUES(:hashtag, CURRENT_TIMESTAMP )";
+        foreach ($result as $trend){
+            if($stmt = $this->pdo->prepare($sql)){
+                $stmt->execute(array(':hashtag' => $trend));
+            }
+        }
+    }
+
+    public function comments($tweet_id){
+        $stmt = $this->pdo->prepare("SELECT * FROM `comments` LEFT JOIN `users` ON `commentBy` = `user_id` WHERE `commentOn` = :tweet_id");
+        $stmt->bindParam(":tweet_id", $tweet_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function countTweets($user_id){
+        $stmt = $this->pdo->prepare("SELECT COUNT(`tweetID`) AS `totalTweets` FROM `tweets` WHERE `tweetBy` = :user_id AND `retweetID` = '0' OR `retweetBy` = :user_id");
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $count = $stmt->fetch(PDO::FETCH_OBJ);
+        echo $count->totalTweets;
+    }
+
+    public function countLikes($user_id){
+        $stmt = $this->pdo->prepare("SELECT COUNT(`likeID`) AS `totalLikes` FROM `likes` WHERE `likeBy` = :user_id ");
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $count = $stmt->fetch(PDO::FETCH_OBJ);
+        echo $count->totalLikes;
     }
 }

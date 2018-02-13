@@ -84,7 +84,7 @@
                             TWEETS
                         </div>
                         <div class="n-bottom">
-                            0
+                            <?php $getFromT->countTweets($user_id); ?>
                         </div>
                     </li>
                     <li>
@@ -113,7 +113,7 @@
                                 LIKES
                             </div>
                             <div class="n-bottom">
-                                0
+                                <?php $getFromT->countLikes($user_id); ?>
                             </div>
                         </a>
                     </li>

@@ -122,7 +122,7 @@
                                                 TWEETS
                                             </div>
                                             <div class="num-body">
-                                                10
+                                                <?php $getFromT->countTweets($user_id); ?>
                                             </div>
                                         </div>
                                         <div class="num-box">

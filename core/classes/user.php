@@ -179,7 +179,7 @@ class User {
                 if($fileSize <= 209272152){
                     $fileRoot = 'users/'.$filename;
                     // перемещаем файл в новое место
-                    move_uploaded_file($fileTmp, $fileRoot);
+                    move_uploaded_file($fileTmp, $_SERVER['DOCUMENT_ROOT'].'/'.$fileRoot);
                     return $fileRoot;
                 } else {
                     $GLOBALS['imageError'] = 'Файл слишком большой!';
