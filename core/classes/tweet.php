@@ -7,9 +7,10 @@ class Tweet extends User {
         $this->pdo = $pdo;
     }
 
-    public function tweets($user_id){
-        $stmt = $this->pdo->prepare("SELECT * FROM `tweets` LEFT JOIN `users` ON `tweetBy` = `user_id` WHERE `tweetBy` = :user_id AND `retweetID` = '0' OR `tweetBy` = `user_id` AND `retweetBy` != :user_id");
+    public function tweets($user_id, $num){
+        $stmt = $this->pdo->prepare("SELECT * FROM `tweets` LEFT JOIN `users` ON `tweetBy` = `user_id` WHERE `tweetBy` = :user_id AND `retweetID` = '0' OR `tweetBy` = `user_id` AND `retweetBy` != :user_id LIMIT :num");
         $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(":num", $num, PDO::PARAM_INT);
         $stmt->execute();
         $tweets = $stmt->fetchAll(PDO::FETCH_OBJ);
         foreach($tweets as $tweet){
@@ -35,7 +36,7 @@ class Tweet extends User {
                         <div class="t-h-c-name">
                             <span><a href="'.BASE_URL.$user->username.'">'.$user->screenName.'</a></span>
                             <span>@ '.$user->username.'</span>
-                            <span>'.$retweet['postedOn'].'</span>
+                            <span>'.$this->timeAgo($retweet['postedOn']).'</span>
                         </div>
                         <div class="t-h-c-dis">
                             '.$this->getTweetLinks($tweet->retweetMsg).'
@@ -53,7 +54,7 @@ class Tweet extends User {
                                 <div class="t-h-c-name">
                                     <span><a href="'.BASE_URL.$tweet->username.'">'.$tweet->screenName.'</a></span>
                                     <span>@ '.$tweet->username.'</span>
-                                    <span>'.$tweet->postedOn.'</span>
+                                    <span>'.$this->timeAgo($tweet->postedOn).'</span>
                                 </div>
                                 <div class="retweet-t-s-b-inner-right-text">
                                    '.$tweet->status.'
@@ -73,7 +74,7 @@ class Tweet extends User {
                             <div class="t-h-c-name">
                                 <span><a href="'.$tweet->username.'">'.$tweet->screenName.'</a></span>
                                 <span>@'.$tweet->username.'</span>
-                                <span>'.$tweet->postedOn.'</span>
+                                <span>'.$this->timeAgo($tweet->postedOn).'</span>
                             </div>
                             <div class="t-h-c-dis">
                                 '.$this->getTweetLinks($tweet->status).'
