@@ -50,14 +50,14 @@ class Tweet extends User {
                             <div class="retweet-t-s-b-inner-left">
                                 <img src="'.BASE_URL.$tweet->tweetImage.'" class="imagePopup" data-tweet="'.$tweet->tweetID.'"/>
                             </div>' : '').'
-                            <div class="retweet-t-s-b-inner-right">
+                            <div>
                                 <div class="t-h-c-name">
                                     <span><a href="'.BASE_URL.$tweet->username.'">'.$tweet->screenName.'</a></span>
                                     <span>@ '.$tweet->username.'</span>
                                     <span>'.$this->timeAgo($tweet->postedOn).'</span>
                                 </div>
                                 <div class="retweet-t-s-b-inner-right-text">
-                                   '.$tweet->status.'
+                                   '.$this->getTweetLinks($tweet->status).'
                                 </div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@ class Tweet extends User {
         $stmt = $this->pdo->prepare("UPDATE `tweets` SET `retweetCount` = `retweetCount` + 1 WHERE `tweetID` = :tweet_id");
         $stmt->bindParam(":tweet_id", $tweet_id, PDO::PARAM_INT);
         $stmt->execute();
-        $stmt = $this->pdo->prepare("INSERT INTO `tweets` (`status`, `tweetBy`, `tweetImage`, `retweetID`, `retweetBy`, `postedOn`, `likesCount`, `retweetCount`, `retweetMsg`) SELECT `status`, `tweetBy`, `tweetImage`, `tweetID`, :user_id, CURRENT_TIMESTAMP, `likesCount`, `retweetCount`, :retweetMsg FROM `tweets` WHERE `tweetID` = :tweet_id");
+        $stmt = $this->pdo->prepare("INSERT INTO `tweets` (`status`, `tweetBy`, `tweetImage`, `retweetID`, `retweetBy`, `postedOn`, `likesCount`, `retweetCount`, `retweetMsg`) SELECT `status`, `tweetBy`, `tweetImage`, `tweetID`, :user_id, `postedOn`, `likesCount`, `retweetCount`, :retweetMsg FROM `tweets` WHERE `tweetID` = :tweet_id");
         $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->bindParam(":retweetMsg", $comment, PDO::PARAM_STR);
         $stmt->bindParam(":tweet_id", $tweet_id, PDO::PARAM_INT);
@@ -157,7 +157,7 @@ class Tweet extends User {
     }
 
     public function checkRetweet($tweet_id, $user_id){
-        $stmt = $this->pdo->prepare("SELECT * FROM `tweets` WHERE `retweetID` = :tweet_id AND `retweetBy` = `user_id` OR `tweetID` = :tweet_id AND `retweetBy` = :user_id");
+        $stmt = $this->pdo->prepare("SELECT * FROM `tweets` WHERE `retweetID` = :tweet_id AND `retweetBy` = :user_id OR `tweetID` = :tweet_id AND `retweetBy` = :user_id");
         $stmt->bindParam(":tweet_id", $tweet_id, PDO::PARAM_INT);
         $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->execute();

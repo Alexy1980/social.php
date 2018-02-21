@@ -611,7 +611,7 @@ box-shadow: inset 0px -4px 0px #6cc854;}
 	font-size: 14px;
 }
 .tweet-footer{
-	width:85%;
+	width:100%;
 	float:right;
 	overflow: hidden;
 
@@ -796,6 +796,11 @@ box-shadow: inset 0px -4px 0px #6cc854;}
 	font-size: 15px;
 	cursor: pointer;
 }
+
+.fa-camera {
+	padding-left: 10%;
+}
+
 .t-s-f-right ul li a {
 	text-decoration:none;
 	color: #999;

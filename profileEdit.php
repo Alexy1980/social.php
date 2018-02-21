@@ -332,6 +332,7 @@
                 foreach($tweets as $tweet){
                     $likes = $getFromT->likes($user_id, $tweet->tweetID);
                     $retweet = $getFromT->checkRetweet($tweet->tweetID, $user_id);
+                    // var_dump($retweet['postedOn']);
                     $user = $getFromU->userData($tweet->retweetBy);
                     echo '<div class="all-tweet">
                                 <div class="t-show-wrap">
@@ -366,14 +367,14 @@
                                                 <div class="retweet-t-s-b-inner-left">
                                                     <img src="'.BASE_URL.$tweet->tweetImage.'" class="imagePopup" data-tweet="'.$tweet->tweetID.'"/>
                                                 </div>' : '').'
-                                                <div class="retweet-t-s-b-inner-right">
+                                                <div>
                                                     <div class="t-h-c-name">
                                                         <span><a href="'.BASE_URL.$tweet->username.'">'.$tweet->screenName.'</a></span>
                                                         <span>@ '.$tweet->username.'</span>
                                                         <span>'.$getFromU->timeAgo($tweet->postedOn).'</span>
                                                     </div>
                                                     <div class="retweet-t-s-b-inner-right-text">
-                                                       '.$tweet->status.'
+                                                       '.$getFromT->getTweetLinks($tweet->status).'
                                                     </div>
                                                 </div>
                                             </div>
