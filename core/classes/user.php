@@ -72,6 +72,7 @@ class User {
         return (isset($_SESSION['user_id'])) ? true : false;
     }
 
+    // проверка, есть ли пользователь
     public function checkUsername($username) {
         $stmt = $this->pdo->prepare("SELECT `username` FROM `users` WHERE `username` = :username");
         $stmt->bindParam(":username", $username, PDO::PARAM_STR);
@@ -84,6 +85,7 @@ class User {
         }
     }
 
+    // проверка пароля
     public function checkPassword($password){
         $stmt = $this->pdo->prepare("SELECT `password` FROM `users` WHERE `password` = :password");
         $stmt->bindParam(":password", md5($password), PDO::PARAM_STR);
