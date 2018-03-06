@@ -1,9 +1,10 @@
 $(function() {
     $('.follow-btn').click(function(){
         var followID = $(this).data('follow');
+        var profile = $(this).data('profile');
         $button = $(this);
         if($button.hasClass('following-btn')){
-            $.post('http://twitter/core/ajax/follow.php', {unfollow:followID}, function(data){
+            $.post('http://twitter/core/ajax/follow.php', {unfollow:followID, profile:profile}, function(data){
                 data = JSON.parse(data);
                 $button.removeClass('following-btn');
                 $button.removeClass('unfollow-btn');
@@ -12,7 +13,7 @@ $(function() {
                 $('.count-followers').text(data.followers);
             });
         } else {
-            $.post('http://twitter/core/ajax/follow.php', {follow:followID}, function(data){
+            $.post('http://twitter/core/ajax/follow.php', {follow:followID, profile:profile}, function(data){
                 data = JSON.parse(data);
                 $button.removeClass('follow-btn');
                 $button.addClass('following-btn');

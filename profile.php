@@ -120,7 +120,7 @@
                 </ul>
                 <div class="edit-button">
                     <span>
-                        <?php echo $getFromF->followBtn($profileId, $user_id); ?>
+                        <?php echo $getFromF->followBtn($profileId, $user_id, $profileData->user_id); ?>
                     </span>
                 </div>
             </div>
