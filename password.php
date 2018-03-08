@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li><label for="pop-up-tweet">Tweet</label></li>
+                        <li><label for="pop-up-tweet" class="addTweetBtn">Tweet</label></li>
 
                     </ul>
                 </div>
@@ -83,7 +83,9 @@
 
             </div>
             <!-- nav ends -->
-
+            <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/popupForm.js"></script>
+            <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/search.js"></script>
+            <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/hashtag.js"></script>
         </div><!-- nav container ends -->
     </div><!-- header wrapper end -->
 
@@ -212,6 +214,12 @@
 <!--CONTAINER_WRAP ENDS-->
 </div>
 <!-- ends wrapper -->
+<!--TWEETS SHOW WRAPPER-->
+<div class="loading-div">
+    <img id="loader" src="assets/images/loading.svg" style="display: none;"/>
+</div>
+<div class="popupTweet"></div>
+<!--Tweet END WRAPER-->
 </body>
 </html>
 
