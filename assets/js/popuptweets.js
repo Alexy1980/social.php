@@ -10,6 +10,7 @@ $(function(){
     });
 
     $(document).on('click', '.imagePopup', function(e){
+        // метод stopPropagation() останавливает всплытие (bubbling) события “клик” к родительским элементам
         e.stopPropagation();
         var tweet_id = $(this).data('tweet');
         $.post('http://twitter/core/ajax/imagePopup.php', {showImage:tweet_id}, function(data){
