@@ -221,6 +221,7 @@
     <img id="loader" src="assets/images/loading.svg" style="display: none;"/>
 </div>
 <div class="popupTweet"></div>
+<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/postMessage.js"></script>
 <!--Tweet END WRAPER-->
 </body>
 </html>

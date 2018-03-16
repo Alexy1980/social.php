@@ -351,8 +351,8 @@
                 <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/fetch.js"></script>
                 <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/search.js"></script>
                 <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/hashtag.js"></script>
-                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/follow.js"></script>
                 <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/messages.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/postMessage.js"></script>
             </div>
             <!-- in center end -->
 
@@ -360,7 +360,7 @@
                 <div class="in-right-wrap">
 
                     <!--==WHO TO FOLLOW==-->
-                    <!--who to follow-->
+                    <?php $getFromF->whoToFollow($user_id, $profileId); ?>
                     <!--==WHO TO FOLLOW==-->
 
                     <!--==TRENDS==-->
@@ -369,6 +369,7 @@
 
                 </div><!-- in right wrap-->
             </div>
+            <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/follow.js"></script>
             <!-- in right end -->
 
         </div>

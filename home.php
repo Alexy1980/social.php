@@ -211,6 +211,7 @@
                         <script type="text/javascript" src="assets/js/fetch.js"></script>
                         <script type="text/javascript" src="assets/js/follow.js"></script>
                         <script type="text/javascript" src="assets/js/messages.js"></script>
+                        <script type="text/javascript" src="assets/js/postMessage.js"></script>
                     </div><!-- in left wrap-->
                 </div><!-- in center end -->
 
