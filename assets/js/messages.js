@@ -51,11 +51,26 @@ $(function(){
             $('#chat').scrollTop($('#chat')[0].scrollHeight);
         };
 
-        $('.back-messages').click(function(){
+        $(document).on('click', '.back-messages', function(){
             var getMessages = 1;
             $.post('http://twitter/core/ajax/messages.php', {showMessage:getMessages}, function(data){
                 $('.popupTweet').html(data);
                 clearInterval(timer);
+            });
+        });
+
+        $(document).on('click', '.deleteMsg', function(){
+            var messageID = $(this).data('message');
+            // устанавливаем высоту элемента .message-del-inner
+            $('.message-del-inner').height('100px');
+            $(document).on('click', '.cancel', function(){
+                $('.message-del-inner').height('0px');
+            });
+            $(document).on('click', '.delete', function(){
+                $.post('http://twitter/core/ajax/messages.php', {deleteMsg:messageID}, function(data){
+                    $('.message-del-inner').height('0px');
+                    getMessages();
+                });
             });
         });
     });
