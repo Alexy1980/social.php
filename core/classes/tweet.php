@@ -139,7 +139,7 @@ class Tweet extends User {
 
     public function getTweetLinks($tweet){
         // var_dump($tweet);
-        $tweet = preg_replace("/(https?:\/\/)([\w]+.)([\w\.]+)/", "<a href='$0' target='_blink'>$0</a>", $tweet);
+        $tweet = preg_replace("/(https?:\/\/)([\w]+.)([\w\.]+)/", "<a href='$0' target='_blank'>$0</a>", $tweet);
         $tweet = preg_replace("/#([\w\.]+)/", "<a href='".BASE_URL."hashtag/$1'>$0</a>", $tweet);
         $tweet = preg_replace("/@([\w\.]+)/", "<a href='".BASE_URL."/$1'>$0</a>", $tweet);
         return $tweet;
@@ -239,7 +239,7 @@ class Tweet extends User {
     }
 
     public function trends(){
-        $stmt = $this->pdo->prepare("SELECT *, COUNT(`tweetID`) AS `tweetsCount` FROM `trends` INNER JOIN `tweets` ON `status` LIKE CONCAT('%#', `hashtag`, '%') GROUP BY `hashtag` ORDER BY `tweetID`");
+        $stmt = $this->pdo->prepare("SELECT *, COUNT(`tweetID`) AS `tweetsCount` FROM `trends` INNER JOIN `tweets` ON `status` LIKE CONCAT('%#', `hashtag`, '%') OR `retweetMsg` LIKE CONCAT('%#', `hashtag`, '%') GROUP BY `hashtag` ORDER BY `tweetID`");
         $stmt->execute();
         $trends = $stmt->fetchAll(PDO::FETCH_OBJ);
         echo '<div class="trend-wrapper"><div class="trend-inner"><div class="trend-title"><h3>Trends</h3></div><!-- trend title end-->';
@@ -257,5 +257,19 @@ class Tweet extends User {
                 <!--Trend body end-->';
         }
         echo '</div><!--TREND INNER END--></div><!--TRENDS WRAPPER ENDS-->';
+    }
+
+    public function getTweetsByHash($hashtag){
+        $stmt = $this->pdo->prepare("SELECT * FROM `tweets` LEFT JOIN `users` ON `tweetBy` = `user_id` WHERE `status` LIKE :hashtag OR `retweetMsg` LIKE :hashtag");
+        $stmt->bindValue(":hashtag", '%#'.$hashtag.'%', PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getUsersByHash($hashtag){
+        $stmt = $this->pdo->prepare("SELECT DISTINCT * FROM `tweets` INNER JOIN `users` ON `tweetBy` = `user_id` WHERE `status` LIKE :hashtag OR `retweetMsg` LIKE :hashtag GROUP BY `user_id`");
+        $stmt->bindValue(":hashtag", '%#'.$hashtag.'%', PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 }

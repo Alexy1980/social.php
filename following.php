@@ -225,6 +225,7 @@
                                 <!--whoToFollow -->
                                 <?php $getFromF->whoToFollow($user_id, $user_id); ?>
                                 <!-- trends -->
+                                <?php $getFromT->trends(); ?>
                             </div>
 
                         </div>

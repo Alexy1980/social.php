@@ -5,14 +5,16 @@
         $hashtag = $getFromU->checkInput($_GET['hashtag']);
         $user_id = $_SESSION['user_id'];
         $user = $getFromU->userData($user_id);
+        $tweets = $getFromT->getTweetsByHash($hashtag);
+        $accounts = $getFromT->getUsersByHash($hashtag);
     } else {
-        header('Location: index.php');
+        header('Location:'.BASE_URL.' index.php');
     }
 ?>
 <!doctype html>
 <html>
 <head>
-    <title>twitter</title>
+    <title><?php echo '#'.$hashtag.' hashtag on tweety'; ?></title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style-complete.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css"/>
@@ -103,66 +105,201 @@
                 <!-- in left wrap-->
             </div>
             <!-- in left end-->
-
+            <?php if(strpos($_SERVER['REQUEST_URI'], '?f=photos')) : ?>
             <!-- TWEETS IMAGES  -->
-            <!--  <div class="hash-img-wrapper">
-                 <div class="hash-img-inner">
-                     <div class="hash-img-flex">
-                         <img src="TWEET-IMAGE"/>
-                         <div class="hash-img-flex-footer">
-                             <ul>
-                                 <li><i class="fa fa-share" aria-hidden="true"></i></li>
-                                 <li><i class="fa fa-retweet" aria-hidden="true"></i></li>
-                                 <li><i class="fa fa-heart" aria-hidden="true"></i></li>
-                             </ul>
-                         </div>
-                    </div>
-                </div>
-            </div>  -->
+            <div class="hash-img-wrapper">
+                <?php 
+                    $likes = $getFromT->likes($user_id, $tweet->tweetID);
+                    $retweet = $getFromT->checkRetweet($tweet->tweetID, $user_id);
+                    $user = $getFromU->userData($tweet->retweetBy);
+
+                    foreach($tweets as $tweet){
+                        if(!empty($tweet->tweetImage)){
+                        echo '<div class="hash-img-inner">
+                                <div class="hash-img-flex">
+                                     <img src="'.BASE_URL.$tweet->tweetImage.'" class="imagePopup" data-tweet="'.$tweet->tweetID.'"/>
+                                     <div class="hash-img-flex-footer">
+                                         <ul>
+                                             '.(($getFromU->loggedIn() === true) ? '
+                                            <li><button><i class="fa fa-share" aria-hidden="true"></i></button></li>
+                                            <li>'.(($tweet->tweetID === $retweet['retweetID'] OR $user_id == $retweet['retweetBy']) ? '<button class="retweeted" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-retweet" aria-hidden="true"></i><span class="retweetsCount">'.$tweet->retweetCount.'</span></button>' : '<button class="retweet" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-retweet" aria-hidden="true"></i><span class="retweetsCount">'.(($tweet->retweetCount > 0) ? $tweet->retweetCount : '').'</span></button>').'</li>
+                                            <li>'.(($likes['likeOn'] === $tweet->tweetID) ? '<button class="unlike-btn" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-heart" aria-hidden="true"></i><span class="likesCount">'.$tweet->likesCount.'</span></button>' : '<button class="like-btn" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-heart-o" aria-hidden="true"></i><span class="likesCount">'.(($tweet->likesCount > 0) ? $tweet->likesCount : '').'</span></button>' ).'</li>
+                                                '.(($tweet->tweetBy === $user_id) ? '
+<li><a href="#" class="more"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+    <ul>
+      <li><label class="deleteTweet" data-tweet="'.$tweet->tweetID.'">Delete Tweet</label></li>
+    </ul>
+</li>' : '').'' : '<li><button><i class="fa fa-share" aria-hidden="true"></i></button></li>
+                   <li><button><i class="fa fa-retweet" aria-hidden="true"></i></button></li>
+                   <li><button><i class="fa fa-heart" aria-hidden="true"></i></button></li>').'
+                                         </ul>
+                                     </div>
+                                </div>
+                            </div>';
+                        }   
+                    } 
+                ?>    
+            </div>
             <!-- TWEETS IMAGES -->
-
+            <?php elseif(strpos($_SERVER['REQUEST_URI'], '?f=users')) : ?>
             <!--TWEETS ACCOUTS-->
-            <!-- <div class="wrapper-following">
-            <div class="wrap-follow-inner">
-
-             <div class="follow-unfollow-box">
-                <div class="follow-unfollow-inner">
-                    <div class="follow-background">
-                        <img src="PROFILE-COVER"/>
-                    </div>
-                    <div class="follow-person-button-img">
-                        <div class="follow-person-img">
-                             <img src="PROFILE-IMAGE"/>
+            <div class="wrapper-following">
+                <div class="wrap-follow-inner">
+                    <?php foreach($accounts as $users) : ?>    
+                        <div class="follow-unfollow-box">
+                            <div class="follow-unfollow-inner">
+                                <div class="follow-background">
+                                    <img src="<?php echo BASE_URL.$users->profileCover; ?>"/>
+                                </div>
+                                <div class="follow-person-button-img">
+                                    <div class="follow-person-img">
+                                         <img src="<?php echo BASE_URL.$users->profileImage; ?>"/>
+                                    </div>
+                                    <div class="follow-person-button">
+                                       <?php echo $getFromF->followBtn($users->user_id, $user_id, $user_id); ?>
+                                    </div>
+                                </div>
+                                <div class="follow-person-bio">
+                                    <div class="follow-person-name">
+                                        <a href="<?php echo BASE_URL.$users->username; ?>"><?php echo $users->screenName; ?></a>
+                                    </div>
+                                    <div class="follow-person-tname">
+                                        <a href="<?php echo BASE_URL.$users->username; ?>">@<?php echo $users->username; ?></a>
+                                    </div>
+                                    <div class="follow-person-dis">
+                                        <?php echo $getFromT->getTweetLinks($users->bio); ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="follow-person-button">
-                           PROFILE-BUTTON
-                        </div>
-                    </div>
-                    <div class="follow-person-bio">
-                        <div class="follow-person-name">
-                            <a href="#">SCREEN-NAME</a>
-                        </div>
-                        <div class="follow-person-tname">
-                            <a href="#">@USERNAME</a>
-                        </div>
-                        <div class="follow-person-dis">
-                            PROFILE-BIO
-                        </div>
-                    </div>
+                    <?php endforeach; ?>        
                 </div>
             </div>
-
-            </div>
-            </div> -->
             <!-- TWEETS ACCOUNTS -->
-
+            <?php else : ?>
             <div class="in-center">
                 <div class="in-center-wrap">
                     <!-- TWEETS -->
+                    <?php 
+                        foreach($tweets as $tweet){
+                            $likes = $getFromT->likes($user_id, $tweet->tweetID);
+                            $retweet = $getFromT->checkRetweet($tweet->tweetID, $user_id);
+                            $user = $getFromU->userData($tweet->retweetBy);
+                            // var_dump($retweet);
+                            echo '<div class="all-tweet">
+                            <div class="t-show-wrap">
+                             <div class="t-show-inner">
+                             '.(($retweet['retweetID'] === $tweet->retweetID OR $tweet->retweetID > 0) ? '
+                               <!--this div is for retweet icon-->
+                                <div class="t-show-banner">
+                                    <div class="t-show-banner-inner">
+                                        <span><i class="fa fa-retweet" aria-hidden="true"></i></span><span>'.$user->screenName. ' Retweeted</span>
+                                    </div>
+                                </div>' : '').'
+                                                '.((!empty($tweet->retweetMsg) && $tweet->tweetID === $retweet['tweetID'] or $tweet->retweetID > 0) ? '<div class="t-show-popup" data-tweet="'.$tweet->tweetID.'">
+                                    <div class="t-show-head">
+                                    <div class="t-show-img">
+                                        <img src="'.BASE_URL.$user->profileImage.'"/>
+                                    </div>
+                                    <div class="t-s-head-content">
+                                        <div class="t-h-c-name">
+                                            <span><a href="'.BASE_URL.$user->username.'">'.$user->screenName.'</a></span>
+                                            <span>@ '.$user->username.'</span>
+                                            <span>'.$getFromU->timeAgo($tweet->postedOn).'</span>
+                                        </div>
+                                        <div class="t-h-c-dis">
+                                            '.$getFromT->getTweetLinks($tweet->retweetMsg).'
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="t-s-b-inner">
+                                    <div class="t-s-b-inner-in">
+                                        <div class="retweet-t-s-b-inner">
+                                            '.((!empty($tweet->tweetImage)) ? '
+                                            <div class="retweet-t-s-b-inner-left">
+                                                <img src="'.BASE_URL.$tweet->tweetImage.'" class="imagePopup" data-tweet="'.$tweet->tweetID.'"/>
+                                            </div>' : '').'
+                                            <div>
+                                                <div class="t-h-c-name">
+                                                    <span><a href="'.BASE_URL.$tweet->username.'">'.$tweet->screenName.'</a></span>
+                                                    <span>@ '.$tweet->username.'</span>
+                                                    <span>'.$getFromU->timeAgo($tweet->postedOn).'</span>
+                                                </div>
+                                                <div class="retweet-t-s-b-inner-right-text">
+                                                   '.$getFromT->getTweetLinks($tweet->status).'
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                ' : '
+                                <div class="t-show-popup" data-tweet="'.$tweet->tweetID.'">
+                                    <div class="t-show-head">
+                                        <div class="t-show-img">
+                                            <img src="'.BASE_URL.$tweet->profileImage.'"/>
+                                        </div>
+                                        <div class="t-s-head-content">
+                                            <div class="t-h-c-name">
+                                                <span><a href="'.$tweet->username.'">'.$tweet->screenName.'</a></span>
+                                                <span>@'.$tweet->username.'</span>
+                                                <span>'.$getFromU->timeAgo($tweet->postedOn).'</span>
+                                            </div>
+                                            <div class="t-h-c-dis">
+                                                '.$getFromT->getTweetLinks($tweet->status).'
+                                            </div>
+                                        </div>
+                                    </div>'.((!empty($tweet->tweetImage)) ?
+                                        '<!--tweet show head end-->
+                                        <div class="t-show-body">
+                                          <div class="t-s-b-inner">
+                                           <div class="t-s-b-inner-in">
+                                             <img src="'.BASE_URL.$tweet->tweetImage.'" class="imagePopup" data-tweet="'.$tweet->tweetID.'"/>
+                                           </div>
+                                          </div>
+                                        </div>
+                                        <!--tweet show body end-->
+                                        ': '').'
+                                </div>').'
+                                <div class="t-show-footer">
+                                    <div class="t-s-f-right">
+                                        <ul>
+                                        '.(($getFromU->loggedIn() === true) ? '
+                                            <li><button><i class="fa fa-share" aria-hidden="true"></i></button></li>
+                                            <li>'.(($tweet->tweetID === $retweet['retweetID'] OR $user_id == $retweet['retweetBy']) ? '<button class="retweeted" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-retweet" aria-hidden="true"></i><span class="retweetsCount">'.$tweet->retweetCount.'</span></button>' : '<button class="retweet" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-retweet" aria-hidden="true"></i><span class="retweetsCount">'.(($tweet->retweetCount > 0) ? $tweet->retweetCount : '').'</span></button>').'</li>
+                                            <li>'.(($likes['likeOn'] === $tweet->tweetID) ? '<button class="unlike-btn" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-heart" aria-hidden="true"></i><span class="likesCount">'.$tweet->likesCount.'</span></button>' : '<button class="like-btn" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-heart-o" aria-hidden="true"></i><span class="likesCount">'.(($tweet->likesCount > 0) ? $tweet->likesCount : '').'</span></button>' ).'</li>
+                                                '.(($tweet->tweetBy === $user_id) ? '
+<li><a href="#" class="more"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+    <ul>
+      <li><label class="deleteTweet" data-tweet="'.$tweet->tweetID.'">Delete Tweet</label></li>
+    </ul>
+</li>' : '').'' : '<li><button><i class="fa fa-share" aria-hidden="true"></i></button></li>
+                   <li><button><i class="fa fa-retweet" aria-hidden="true"></i></button></li>
+                   <li><button><i class="fa fa-heart" aria-hidden="true"></i></button></li>').'
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>';
+                        }
+                     ?>
                 </div>
             </div>
-
-
+            <?php endif; ?>
+            <div class="popupTweet"></div>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/like.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/retweet.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/popuptweets.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/delete.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/comment.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/popupForm.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/fetch.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/search.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/hashtag.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/messages.js"></script>
+                <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/postMessage.js"></script>
+            </div>
         </div><!--in full wrap end-->
     </div><!-- in wrappper ends-->
 
