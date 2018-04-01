@@ -256,6 +256,7 @@
             <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/hashtag.js"></script>
             <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/messages.js"></script>
             <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/postMessage.js"></script>
+            <script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/notification.js"></script>
         </div><!--in full wrap end-->
     </div>
     <!-- in wrappper ends-->
