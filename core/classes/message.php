@@ -79,9 +79,22 @@ class Message extends User {
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    // при отработке данной функции меняем status на 1 (сообщение просмотрено)
     public function messagesViewed($user_id){
         $stmt = $this->pdo->prepare("UPDATE `messages` SET `status` = '1' WHERE `messageTo` = :user_id AND `status` = '0'");
         $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+    public function notification($user_id){
+        $stmt = $this->pdo->prepare("SELECT * FROM `notification` N
+                            LEFT JOIN `users` U ON N.`notificationFrom` = U.`user_id`
+                            LEFT JOIN `tweets` T ON N.`target` = T.`tweetID`
+                            LEFT JOIN `likes` L ON N.`target` = L.`likeOn`
+                            LEFT JOIN `follow` F ON N.`notificationFrom` = F.`sender` AND N.`notificationFor` = F.`receiver`
+                            WHERE N.`notificationFor` = :user_id AND N.`notificationFor` != :user_id");
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $stmt->execute(array("user_id" => $user_id));
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 }
