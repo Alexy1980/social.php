@@ -92,7 +92,7 @@ class Message extends User {
                             LEFT JOIN `tweets` T ON N.`target` = T.`tweetID`
                             LEFT JOIN `likes` L ON N.`target` = L.`likeOn`
                             LEFT JOIN `follow` F ON N.`notificationFrom` = F.`sender` AND N.`notificationFor` = F.`receiver`
-                            WHERE N.`notificationFor` = :user_id AND N.`notificationFor` != :user_id");
+                            WHERE N.`notificationFor` = :user_id AND N.`notificationFrom` != :user_id");
         $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->execute(array("user_id" => $user_id));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
