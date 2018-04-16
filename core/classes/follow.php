@@ -43,6 +43,7 @@ class Follow extends User {
         $stmt->execute(array("user_id" => $user_id, "profileID" => $profileID));
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         echo json_encode($data);
+        Message::sendNotification($followID, $user_id, $followID, 'follow');
     }
 
     public function unfollow($followID, $user_id, $profileID){

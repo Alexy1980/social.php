@@ -14,7 +14,7 @@ $(function(){
                 success: function(data){
                     $('.hash-box ul').html(data);
                     $('.hash-box li').click(function(){
-                        var value = "#" + $.trim($(this).find('.getValue').text());
+                        var value = $.trim($(this).find('.getValue').text());
                         var oldContent = $('.status').val();
                         var newContent = oldContent.replace(regex, "");
                         $('.status').val(newContent + value + ' ');

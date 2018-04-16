@@ -123,6 +123,9 @@ class Tweet extends User {
         $stmt->execute();
         // likeBy - кто лайкнул
         $this->create('likes', array('likeBy' => $user_id, 'likeOn' => $tweet_id));
+        if($get_id != $user_id){
+            Message::sendNotification($get_id, $user_id, $tweet_id, 'like');
+        }
     }
 
     public function unlike($user_id, $tweet_id, $get_id){
@@ -154,6 +157,7 @@ class Tweet extends User {
         $stmt->bindParam(":retweetMsg", $comment, PDO::PARAM_STR);
         $stmt->bindParam(":tweet_id", $tweet_id, PDO::PARAM_INT);
         $stmt->execute();
+        Message::sendNotification($get_id, $user_id, $tweet_id, 'retweet');
     }
 
     public function checkRetweet($tweet_id, $user_id){
@@ -205,6 +209,24 @@ class Tweet extends User {
             if($stmt = $this->pdo->prepare($sql)){
                 $stmt->execute(array(':hashtag' => $trend));
             }
+        }
+    }
+
+    public function addMention($status, $user_id, $tweet_id){
+        preg_match_all("/@+([a-zA-Z0-9]+)/i", $status, $matches);
+        if($matches){
+            // array_values() возвращает массив со всеми элементами массива array. Она также заново индексирует возвращаемый массив числовыми индексами
+            $result = array_values($matches[1]);
+        }
+        $sql = "SELECT * FROM `users` WHERE `username` = :mention";
+        foreach ($result as $trend){
+            if($stmt = $this->pdo->prepare($sql)){
+                $stmt->execute(array(':mention' => $trend));
+                $data = $stmt->fetch(PDO::FETCH_OBJ);
+            }
+        }
+        if($data->$user_id != $user_id){
+            Message::sendNotification($data->$user_id, $user_id, $tweet_id, 'mention');
         }
     }
 

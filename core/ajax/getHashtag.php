@@ -8,7 +8,7 @@
             $trend = str_replace('#', '', $hashtag);
             $trends = $getFromT->getTrendByHash($trend);
             foreach($trends as $hashtag){
-                echo '<li><a href="#"><span class="getValue">'.$hashtag->hashtag.'</span></a></li>';
+                echo '<li><a href="#"><span class="getValue">#'.$hashtag->hashtag.'</span></a></li>';
             }
         }
 

@@ -245,8 +245,8 @@
 
                                                 <div class="noti-footer-inner-left">
                                                     <div class="t-h-c-name">
-                                                        <span><a href="<?php echo BASE_URL.$data->username; ?>"><?php echo $data->screenName; ?></a></span>
-                                                        <span>@<?php echo $data->screenName; ?></span>
+                                                        <span><a href="<?php echo BASE_URL.$user->username; ?>"><?php echo $user->username; ?></a></span>
+                                                        <span>@<?php echo $user->username; ?></span>
                                                         <span><?php echo $getFromU->timeAgo($data->postedOn); ?></span>
                                                     </div>
                                                     <div class="noti-footer-inner-right-text">
@@ -277,6 +277,7 @@
                                     echo '<div class="all-tweet-inner">
                                         <div class="t-show-wrap">
                                          <div class="t-show-inner">
+
                                             <div class="t-show-popup" data-tweet="'.$tweet->tweetID.'">
                                                 <div class="t-show-head">
                                                     <div class="t-show-img">
@@ -292,12 +293,13 @@
                                                             '.$getFromT->getTweetLinks($tweet->status).'
                                                         </div>
                                                     </div>
-                                                </div>'.((!empty($tweet->tweetImage)) ?
+                                                </div>'.
+                                                        ((!empty($tweet->tweetImage)) ?
                                                             '<!--tweet show head end-->
                                                     <div class="t-show-body">
                                                       <div class="t-s-b-inner">
                                                        <div class="t-s-b-inner-in">
-                                                         <img src="'.BASE_URL.$tweet->tweetImage.'" class="imagePopup" data-tweet="'.$tweet->tweetID.'"/>
+                                                         <img src="'.$tweet->tweetImage.'" class="imagePopup" data-tweet="'.$tweet->tweetID.'"/>
                                                        </div>
                                                       </div>
                                                     </div>
@@ -311,12 +313,12 @@
                                                         <li><button><i class="fa fa-share" aria-hidden="true"></i></button></li>
                                                         <li>'.(($tweet->tweetID === $retweet['retweetID'] OR $user_id == $retweet['retweetBy']) ? '<button class="retweeted" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-retweet" aria-hidden="true"></i><span class="retweetsCount">'.$tweet->retweetCount.'</span></button>' : '<button class="retweet" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-retweet" aria-hidden="true"></i><span class="retweetsCount">'.(($tweet->retweetCount > 0) ? $tweet->retweetCount : '').'</span></button>').'</li>
                                                         <li>'.(($likes['likeOn'] === $tweet->tweetID) ? '<button class="unlike-btn" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-heart" aria-hidden="true"></i><span class="likesCount">'.$tweet->likesCount.'</span></button>' : '<button class="like-btn" data-tweet="'.$tweet->tweetID.'" data-user="'.$tweet->tweetBy.'"><i class="fa fa-heart-o" aria-hidden="true"></i><span class="likesCount">'.(($tweet->likesCount > 0) ? $tweet->likesCount : '').'</span></button>' ).'</li>
-                                                            '.(($tweet->tweetBy === $user_id || $tweet->tweetBy === null) ? '
+                                                            '. '
             <li><a href="#" class="more"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                 <ul>
                   <li><label class="deleteTweet" data-tweet="'.$tweet->tweetID.'">Delete Tweet</label></li>
                 </ul>
-            </li>' : '').'' : '<li><button><i class="fa fa-share" aria-hidden="true"></i></button></li>
+            </li>'.'' : '<li><button><i class="fa fa-share" aria-hidden="true"></i></button></li>
                                <li><button><i class="fa fa-retweet" aria-hidden="true"></i></button></li>
                                <li><button><i class="fa fa-heart" aria-hidden="true"></i></button></li>').'
                                                     </ul>

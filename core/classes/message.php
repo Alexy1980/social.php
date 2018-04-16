@@ -102,4 +102,8 @@ class Message extends User {
         $stmt->execute(array("user_id" => $user_id));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public function sendNotification($get_id, $user_id, $target, $type){
+        $this->create('notification', array('notificationFor' => $get_id, 'notificationFrom' => $user_id, 'target' => $target, 'type' => $type, 'time' => date('Y-m-d H:i:s')));
+    }
 }
