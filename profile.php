@@ -4,7 +4,7 @@
         $username = $getFromU->checkInput($_GET['username']);
         $profileId = $getFromU->userIdByUsername($username);
         $profileData =  $getFromU->userData($profileId);
-        $user_id = $_SESSION['user_id'];
+        $user_id = @$_SESSION['user_id'];
         $user = $getFromU->userData($user_id);
         $notify = $getFromM->getNotificationCount($user_id);
         if(!$profileData){

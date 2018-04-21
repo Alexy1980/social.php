@@ -15,6 +15,12 @@ class User {
         return $var;
     }
 
+    public function preventAccess($request, $currentFile, $currently){
+        if($request == "GET" && $currentFile == $currently){
+            header('Location:'.BASE_URL.'index.php');
+        }
+    }
+
     public function search($search){
         $stmt = $this->pdo->prepare("SELECT `user_id`, `username`, `screenName`, `profileImage`, `profileCover` FROM `users` WHERE `username` LIKE ? OR `screenName` LIKE ?");
         // PDOStatement::bindValue Связывает параметр с заданным значением

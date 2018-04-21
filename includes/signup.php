@@ -1,4 +1,7 @@
 <?php
+    if($_SERVER['REQUEST_METHOD'] == "GET" && realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])){
+        header('Location: ../index.php');
+    }
     include '../core/init.php';
     $user_id = $_SESSION['user_id'];
     $user = $getFromU->userData($user_id);

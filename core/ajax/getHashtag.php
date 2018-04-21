@@ -1,5 +1,6 @@
 <?php
     include '../init.php';
+    $getFromU->preventAccess($_SERVER['REQUEST_METHOD'], realpath(__FILE__), realpath($_SERVER['SCRIPT_FILENAME']));
     // добавляя хэш-тэг перед строкой, получаем выпадающий список из таблицы trends
     if(isset($_POST['hashtag'])){
         $hashtag = $getFromU->checkInput($_POST['hashtag']);

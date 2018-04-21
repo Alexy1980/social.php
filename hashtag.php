@@ -3,7 +3,7 @@
 
     if(isset($_GET['hashtag']) && !empty($_GET['hashtag'])){
         $hashtag = $getFromU->checkInput($_GET['hashtag']);
-        $user_id = $_SESSION['user_id'];
+        $user_id = @$_SESSION['user_id'];
         $user = $getFromU->userData($user_id);
         $tweets = $getFromT->getTweetsByHash($hashtag);
         $accounts = $getFromT->getUsersByHash($hashtag);
