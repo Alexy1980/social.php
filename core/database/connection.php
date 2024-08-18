@@ -2,7 +2,7 @@
 
 $dsn = 'mysql:host=localhost; dbname=twitter';
 $user = 'paul';
-$pass = '170680';
+$pass = '';
 
 try{
     $pdo = new PDO($dsn, $user, $pass);
